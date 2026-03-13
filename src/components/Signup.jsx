@@ -9,7 +9,7 @@ const Signup = () => {
   const [password, setPassword] = React.useState("");
   const { register } = useAuth();
   const navigate = useNavigate();
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
