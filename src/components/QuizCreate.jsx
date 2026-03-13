@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LuPlus, LuTrash2, LuCheck } from "react-icons/lu";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import API_BASE_URL from "../config/api";
 
 function QuizCreate() {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ function QuizCreate() {
 
     try {
       // save to database
-      const response = await axios.post("http://localhost:5000/api/quizzes/create", newQuiz);
+      const response = await axios.post(`${API_BASE_URL}/quiz/create`, newQuiz);
 
       console.log("Quiz saved successfully!");
       alert("Quiz published successfully!");

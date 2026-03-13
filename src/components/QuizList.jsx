@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 function QuizList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,7 +26,7 @@ function QuizList() {
     const loadQuizzes = async () => {
       try {
         console.log("Loading quizzes from database...");
-        const response = await axios.get("http://localhost:5000/api/quizzes/all");
+        const response = await axios.get(`${API_BASE_URL}/quiz/all`);
         console.log("Quizzes loaded:", response.data.quizzes.length);
         setQuizzes(response.data.quizzes);
         setLoading(false);
