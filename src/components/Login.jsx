@@ -13,6 +13,13 @@ const Login = () => {
     e.preventDefault();
 
     console.log("login form submitted");
+    console.log("email value:", email);
+    console.log("password value:", password ? "provided" : "missing");
+
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
 
     const result = await login(email, password);
 

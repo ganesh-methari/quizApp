@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
-        
       } catch (error) {
         console.log("error parsing user from localStorage:", error);
         localStorage.removeItem("user");
@@ -36,13 +35,32 @@ export const AuthProvider = ({ children }) => {
   // login function
   const login = async (email, password) => {
     try {
-      console.log("attempting login...");
+      console.log("attempting login with email:", email);
+      console.log("API URL:", `${API_BASE_URL}/auth/login`);
+
       const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password
       });
 
-      const userData = response.data.user;
+      console.log("login response data:", response.data);
+
+      // Handle different response structures
+      let userData;
+      if (response.data.user) {
+        userData = response.data.user;
+      } else if (response.data.data) {
+        userData = response.data.data;
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        return { success: false, error: "Invalid response from server" };
+      }
+
+      if (!userData.email) {
+        console.error("User data missing email:", userData);
+        return { success: false, error: "Invalid user data received from server" };
+      }
+
       console.log("login successful for:", userData.email);
 
       setUser(userData);

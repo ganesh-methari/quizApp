@@ -26,12 +26,31 @@ function QuizList() {
     const loadQuizzes = async () => {
       try {
         console.log("Loading quizzes from database...");
+        console.log("API URL:", `${API_BASE_URL}/quizzes/all`);
+
         const response = await axios.get(`${API_BASE_URL}/quizzes/all`);
-        console.log("Quizzes loaded:", response.data.quizzes.length);
-        setQuizzes(response.data.quizzes);
+
+        console.log("Response data:", response.data);
+
+        // Handle different response structures
+        let quizzesData;
+        if (response.data.quizzes) {
+          quizzesData = response.data.quizzes;
+        } else if (response.data.data) {
+          quizzesData = response.data.data;
+        } else if (Array.isArray(response.data)) {
+          quizzesData = response.data;
+        } else {
+          console.error("Unexpected response structure:", response.data);
+          quizzesData = [];
+        }
+
+        console.log("Quizzes loaded:", quizzesData.length);
+        setQuizzes(quizzesData);
         setLoading(false);
       } catch (error) {
         console.log("Error loading quizzes:", error);
+        console.log("Error details:", error.response?.data);
         setLoading(false);
       }
     };
@@ -40,11 +59,11 @@ function QuizList() {
   }, []);
 
   // filter quizzes based on search
-  const filteredQuizzes = quizzes.filter(quiz => {
+  const filteredQuizzes = (quizzes || []).filter(quiz => {
     const searchLower = searchTerm.toLowerCase();
     return (
       quiz.title.toLowerCase().includes(searchLower) ||
-      quiz.description.toLowerCase().includes(searchLower)
+      (quiz.description && quiz.description.toLowerCase().includes(searchLower))
     );
   });
 

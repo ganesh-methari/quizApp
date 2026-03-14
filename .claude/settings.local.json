@@ -6,7 +6,9 @@
       "Bash(sed:*)",
       "Bash(node:*)",
       "Bash(vercel.json:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(src/config/api.js:*)",
+      "Bash(__NEW_LINE_3236198a4cfb209d__ echo:*)"
     ]
   }
 }
