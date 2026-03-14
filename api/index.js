@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
   }
 
   // Health check
-  if (req.url === '/health' || req.url === '/api/health') {
+  if (req.url === '/api/health' || req.url === '/health') {
     try {
       await connectDB();
       res.status(200).json({
@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
   }
 
   // Register endpoint
-  if (req.url === '/auth/register' || req.url === '/api/auth/register') {
+  if (req.url === '/api/auth/register' || req.url === '/auth/register') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -136,7 +136,7 @@ module.exports = async (req, res) => {
   }
 
   // Login endpoint
-  if (req.url === '/auth/login' || req.url === '/api/auth/login') {
+  if (req.url === '/api/auth/login' || req.url === '/auth/login') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
