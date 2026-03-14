@@ -46,8 +46,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/quiz', quizRoutes);
 
-// 404 handler
-app.use('/api/*', (req, res) => {
+// 404 handler for API routes
+app.use('/api', (req, res) => {
   res.status(404).json({ error: 'API endpoint not found' });
 });
 
