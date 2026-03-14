@@ -5,7 +5,8 @@
       "Bash(curl:*)",
       "Bash(sed:*)",
       "Bash(node:*)",
-      "Bash(vercel.json:*)"
+      "Bash(vercel.json:*)",
+      "Bash(mv:*)"
     ]
   }
 }
