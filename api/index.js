@@ -1,11 +1,11 @@
 /**
- * Simple Vercel Serverless Function
+ * Vercel Serverless Function - ES Modules
  */
 
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 // Initialize Express app
 const app = express();
@@ -107,7 +107,6 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // Export for Vercel
-module.exports = (req, res) => {
+export default function handler(req, res) {
   app(req, res);
-};
-// Force redeploy - Sat, Mar 14, 2026  4:32:55 PM
+}
