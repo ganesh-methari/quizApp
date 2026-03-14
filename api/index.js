@@ -64,8 +64,8 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // Health check
-  if (req.url === '/api/health' || req.url === '/health') {
+  // Health check (Vercel strips /api prefix, so /api/health becomes /health)
+  if (req.url === '/health' || req.url === '/api/health') {
     try {
       await connectDB();
       res.status(200).json({
@@ -81,8 +81,8 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Register endpoint
-  if (req.url === '/api/auth/register' || req.url === '/auth/register') {
+  // Register endpoint (Vercel strips /api prefix)
+  if (req.url === '/auth/register' || req.url === '/api/auth/register') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -94,7 +94,12 @@ module.exports = async (req, res) => {
     try {
       await connectDB();
       
-      const { name, email, password } = req.body;
+      let body = req.body;
+      if (typeof body === 'string') {
+        body = JSON.parse(body);
+      }
+      
+      const { name, email, password } = body;
 
       if (!name || !email || !password) {
         return res.status(400).json({ message: 'Please provide all fields' });
@@ -135,8 +140,8 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Login endpoint
-  if (req.url === '/api/auth/login' || req.url === '/auth/login') {
+  // Login endpoint (Vercel strips /api prefix)
+  if (req.url === '/auth/login' || req.url === '/api/auth/login') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -148,7 +153,12 @@ module.exports = async (req, res) => {
     try {
       await connectDB();
       
-      const { email, password } = req.body;
+      let body = req.body;
+      if (typeof body === 'string') {
+        body = JSON.parse(body);
+      }
+      
+      const { email, password } = body;
 
       if (!email || !password) {
         return res.status(400).json({ message: 'Please provide email and password' });
@@ -189,6 +199,7 @@ module.exports = async (req, res) => {
   res.status(200).json({
     message: 'Quiz App API',
     version: '1.0.0',
+    requestUrl: req.url,
     endpoints: {
       health: '/api/health',
       register: '/api/auth/register',
