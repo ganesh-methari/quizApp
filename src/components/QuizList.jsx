@@ -26,7 +26,7 @@ function QuizList() {
     const loadQuizzes = async () => {
       try {
         console.log("Loading quizzes from database...");
-        const response = await axios.get(`${API_BASE_URL}/quiz/all`);
+        const response = await axios.get(`${API_BASE_URL}/quizzes/all`);
         console.log("Quizzes loaded:", response.data.quizzes.length);
         setQuizzes(response.data.quizzes);
         setLoading(false);

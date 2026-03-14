@@ -121,7 +121,7 @@ function QuizCreate() {
 
     try {
       // save to database
-      const response = await axios.post(`${API_BASE_URL}/quiz/create`, newQuiz);
+      const response = await axios.post(`${API_BASE_URL}/quizzes/create`, newQuiz);
 
       console.log("Quiz saved successfully!");
       alert("Quiz published successfully!");
