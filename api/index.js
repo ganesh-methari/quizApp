@@ -61,22 +61,54 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Database connection (reusable connection)
-if (!mongoose.connection.readyState) {
-  const connectDB = async () => {
-    try {
-      await mongoose.connect(process.env.MONGODB_URI, {
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-      });
-      console.log('✅ MongoDB Connected');
-    } catch (error) {
-      console.error('❌ MongoDB Connection Error:', error);
-      // Don't throw error in serverless, just log it
-    }
-  };
-  connectDB();
+// Database connection (reusable connection for serverless)
+let cached = global.mongo;
+
+if (!cached) {
+  cached = global.mongo = { conn: null, promise: null };
 }
+
+const connectDB = async () => {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    };
+
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then((mongoose) => {
+      console.log('✅ MongoDB Connected');
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    console.error('❌ MongoDB Connection Error:', e);
+    throw e;
+  }
+
+  return cached.conn;
+};
+
+// Connect to database before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(500).json({
+      error: 'Database connection failed',
+      message: process.env.NODE_ENV === 'production' ? 'Service unavailable' : error.message
+    });
+  }
+});
 
 // Export for Vercel
 module.exports = app;

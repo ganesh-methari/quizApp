@@ -4,7 +4,7 @@
  */
 
 const API_BASE_URL = import.meta.env.PROD
-  ? 'https://quizapp-backend-yypu.onrender.com/api'  // Production backend on Render
+  ? '/api'  // In production, use relative paths for Vercel serverless functions
   : 'http://localhost:5000/api';  // In development, use local backend
 
 export default API_BASE_URL;
