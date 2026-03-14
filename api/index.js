@@ -64,15 +64,19 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // Health check (Vercel strips /api prefix, so /api/health becomes /health)
-  if (req.url === '/health' || req.url === '/api/health') {
+  // Get the URL path (Vercel includes full path like /api/health)
+  const url = req.url;
+
+  // Health check
+  if (url === '/health' || url === '/api/health') {
     try {
       await connectDB();
       res.status(200).json({
         status: 'ok',
         timestamp: new Date().toISOString(),
         database: mongoose && mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-        mongodb: process.env.MONGODB_URI ? 'configured' : 'not configured'
+        mongodb: process.env.MONGODB_URI ? 'configured' : 'not configured',
+        url: url
       });
       return;
     } catch (error) {
@@ -81,8 +85,8 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Register endpoint (Vercel strips /api prefix)
-  if (req.url === '/auth/register' || req.url === '/api/auth/register') {
+  // Register endpoint
+  if (url === '/auth/register' || url === '/api/auth/register') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -140,8 +144,8 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Login endpoint (Vercel strips /api prefix)
-  if (req.url === '/auth/login' || req.url === '/api/auth/login') {
+  // Login endpoint
+  if (url === '/auth/login' || url === '/api/auth/login') {
     if (req.method !== 'POST') {
       return res.status(405).json({ message: 'Method not allowed' });
     }
@@ -199,7 +203,8 @@ module.exports = async (req, res) => {
   res.status(200).json({
     message: 'Quiz App API',
     version: '1.0.0',
-    requestUrl: req.url,
+    requestUrl: url,
+    method: req.method,
     endpoints: {
       health: '/api/health',
       register: '/api/auth/register',
