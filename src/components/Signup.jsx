@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import { LuUser, LuMail, LuLock } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +9,7 @@ const Signup = () => {
   const [password, setPassword] = React.useState("");
   const { register } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
