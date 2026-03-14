@@ -8,8 +8,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 // Import routes
-const authRoutes = require('./controllers/auth');
-const quizRoutes = require('./controllers/quiz');
+const authRoutes = require('../controllers/auth');
+const quizRoutes = require('../controllers/quiz');
 
 // Initialize Express app
 const app = express();
